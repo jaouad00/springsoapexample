@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2019 rel. 3 sp1 (http://www.altova.com) by  (ABIS Training and Consulting) -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://abis.be/model" targetNamespace="http://abis.be/model">
+	<wsdl:types>
+		<xs:schema targetNamespace="http://abis.be/model" xmlns:tns="http://abis.be/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
+			<xs:element name="person">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="tns:personId"/>
+						<xs:element name="firstName" type="xs:string"/>
+						<xs:element name="age" type="xs:int"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="persons">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="tns:person" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="personId" type="xs:int"/>
+			<xs:element name="personByIdRequest">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="tns:personId"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="personByIdResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="tns:person"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="allPersonsRequest"/>
+			<xs:element name="allPersonsResponse">
+			   <xs:complexType>
+					<xs:sequence>
+						<xs:element ref="tns:persons"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="PersonByIdRequest">
+		<wsdl:part name="parameter" element="tns:personByIdRequest"/>
+	</wsdl:message>
+	<wsdl:message name="PersonByIdResponse">
+		<wsdl:part name="parameter" element="tns:personByIdResponse"/>
+	</wsdl:message>
+	<wsdl:message name="AllPersonsRequest">
+	    <wsdl:part name="parameter" element="tns:allPersonsRequest"/>
+	</wsdl:message>
+	<wsdl:message name="AllPersonsResponse">
+		<wsdl:part name="parameter" element="tns:allPersonsResponse"/>
+	</wsdl:message>
+
+	<wsdl:portType name="PersonSoap">
+		<wsdl:operation name="PersonByIdOperation">
+			<wsdl:input message="tns:PersonByIdRequest"/>
+			<wsdl:output message="tns:PersonByIdResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="AllPersonsOperation">
+			<wsdl:input message="tns:AllPersonsRequest"/>
+			<wsdl:output message="tns:AllPersonsResponse"/>
+		</wsdl:operation>
+
+	</wsdl:portType>
+	<wsdl:binding name="PersonSoap" type="tns:PersonSoap">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="PersonByIdOperation">
+			<soap:operation soapAction="http://abis.be/services/persons/findPerson"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="AllPersonsOperation">
+			<soap:operation soapAction="http://abis.be/services/persons/findAllPersons"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="PersonService">
+		<wsdl:port name="NewPort" binding="tns:PersonSoap">
+			<soap:address location="http://localhost:8080/abis/soap/persons"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
